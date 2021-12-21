@@ -1,20 +1,21 @@
 /** @jsxImportSource @emotion/react */
 
-import React from "react";
-import { BrowserRouter, Route,} from "react-router-dom";
+import React from "react"
+import { BrowserRouter, Routes, Route } from "react-router-dom"
 
-import Top from "./pages/Top/Top";
+import Top from "./pages/top/Top"
+import Battle from "./pages/battle/Battle"
 
 function App() {
   return (
-    <Top/>
-    /**<BrowserRouter>
-      <Route exact path='/' component={Top}/>
-      <Route>
-        <p>Page is not found</p>
-      </Route>
-    </BrowserRouter>*/
-  );
+    /**<Top/>*/
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<Top />} />
+        <Route path="battle" element={<Battle />} />
+      </Routes>
+    </BrowserRouter>
+  )
 }
 
-export default App;
+export default App
