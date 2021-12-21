@@ -1,9 +1,11 @@
 /** @jsxImportSource @emotion/react */
 import { css } from "@emotion/css"
 
+import { Link } from "react-router-dom"
+
 import GlassButton from "./component/GlassButton"
 
-const Top=()=>{
+function Top(){
   return(
     <div
       className={css({
