@@ -10,6 +10,7 @@
     "@emotion/styled": "^11.6.0",
     "@fontsource/noto-sans-jp": "^4.5.2",
     "@mui/material": "^5.2.5",
+    "@mui/styles": "^5.2.3",
     "@testing-library/jest-dom": "^5.16.1",
     "@testing-library/react": "^12.1.2",
     "@testing-library/user-event": "^13.5.0",
