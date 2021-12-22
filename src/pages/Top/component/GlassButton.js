@@ -25,6 +25,7 @@ const GlassButton = (props) => {
         lineHeight:"116px",
         textAlign:"center",
       })}
+      onClick={props.onClick}
     >
       {props.children}
     </button>
