@@ -1,11 +1,11 @@
-import { createStore } from "redux";
+import { createStore } from 'redux'
 
 const initialState = {
-  topic: "",
-};
+  topic: '',
+}
 
 const reducer = (state = initialState, action) => {
-  switch(action.type){
+  switch (action.type) {
     case 'CHANGE_TOPIC':
       return {
         topic: action.topic,
@@ -13,8 +13,8 @@ const reducer = (state = initialState, action) => {
     default:
       return state
   }
-};
+}
 
-const store = createStore(reducer);
+const store = createStore(reducer)
 
 export default store
