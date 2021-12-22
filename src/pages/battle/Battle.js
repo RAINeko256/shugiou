@@ -51,18 +51,13 @@ function PointGauge(props) {
 
 function Battle() {
 
-  const [userA,setUserA] = React.useState(0.0)
-  const [userB,setUserB] = React.useState(0.0)
-
-  //デモのためにゲージの量を変更させるやつ
-  //今後削除する
+  const [nameA,setNameA] = React.useState("plmwa")
+  const [pointA,setPointA] = React.useState(0.0)
+  const [nameB,setNameB] = React.useState("chaha1n")
+  const [pointB,setPointB] = React.useState(0.0)
+  
   React.useEffect(() => {
-    const timer = setInterval(() => {
-      setUserA((prevProgress) => (prevProgress >= 100 ? 10 : prevProgress + 10));
-    }, 800);
-    return () => {
-      clearInterval(timer);
-    };
+    //ここでIoT coreから取得したデータをsetHogeを使ってセットする
   }, []);
 
   return (
@@ -79,8 +74,8 @@ function Battle() {
         })}
       >
         <BattlerDataBox>
-          <BattleName>userA</BattleName>
-          <PointGauge value={userA} />
+          <BattleName>{nameA}</BattleName>
+          <PointGauge value={pointA} />
         </BattlerDataBox>
         <div className={css({})}>
           <h2
@@ -93,8 +88,8 @@ function Battle() {
           </h2>
         </div>
         <BattlerDataBox>
-          <BattleName>userB</BattleName>
-          <PointGauge value={userB} />
+          <BattleName>{nameB}</BattleName>
+          <PointGauge value={pointB} />
 
         </BattlerDataBox>
       </div>
