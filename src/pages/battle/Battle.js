@@ -55,8 +55,39 @@ function Battle() {
   const [pointA,setPointA] = React.useState(0.0)
   const [nameB,setNameB] = React.useState("chaha1n")
   const [pointB,setPointB] = React.useState(0.0)
+  const MQTTOptions = {
+    port:	18685,
+    host: 'driver.cloudmqtt.com',
+    username:process.env.USERNAME,
+    password:process.env.PASSWORD,
+  }
+  const client = mqtt.connect(MQTTOptions);
   
+  let players = Array();
+
+  client.on('message',(topic,payload)=>{
+    body = JSON.parse(payload.toString())
+    playerName = body.name;
+
+    if(players.length === 2){  //match had already started
+       if(playerName === players[0]){
+         setPointA(body.value)
+       }else{
+         setPointB(body.value)
+       }
+    }
+    else if (players.length < 2){
+       players.push(playerName);
+       setNameA(players[0]);
+       if(players.length == 2){ //players ready,match start
+         setNameB(players[1]);
+     }
+    }
+  });
+
   React.useEffect(() => {
+    const topic = "";
+    client.subscribe(topic);
     //ここでIoT coreから取得したデータをsetHogeを使ってセットする
   }, []);
 
