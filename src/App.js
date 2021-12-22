@@ -6,6 +6,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom"
 import Top from "./pages/top/Top"
 import Battle from "./pages/battle/Battle"
 
+const TopicContext = React.createContext({topic:'',setTopic:()=>{}})
 function App() {
   return (
     /**<Top/>*/
