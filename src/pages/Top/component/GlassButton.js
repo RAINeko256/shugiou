@@ -7,11 +7,15 @@ const GlassButton = (props) => {
       className={css({
         width: "450px",
         height: "250px",
-        background:
-          "linear-gradient(152.97deg, rgba(255, 255, 255, 0.2) 0%, rgba(255, 255, 255, 0) 100%)",
-        backdropFilter: "blur(42px)",
-        /* Note: backdrop-filter has minimal browser support */
-        borderRadius: "16px",
+        background:"rgba( 255, 0, 0, 0.2 )",
+        boxShadow:"0 8px 32px 0 rgba( 31, 38, 135, 0.37 )",
+        backdropFilter:"blur( 5px )",
+        WebkitBackdropFilter:"blur( 5px )",
+        borderRadius:"10px",
+        border:"1px solid rgba( 255, 255, 255, 0.18 )",
+        "&:active":{
+          boxShadow:"inset 0 8px 32px 0 rgba( 31, 38, 135, 0.37 )",
+        },
         
         fontFamily:"Noto Sans JP",
         fontStyle:"normal",
