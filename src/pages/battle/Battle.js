@@ -11,6 +11,7 @@ import Typography from '@mui/material/Typography'
 import Background from '../../component/Background'
 import Title from '../../component/Title'
 import BattleName from './component/BattleName'
+import mqtt from 'mqtt-browser'
 
 //名前とゲージなどを入れるためのLayoutコンポーネント
 function BattlerDataBox(props) {
@@ -49,14 +50,53 @@ function PointGauge(props) {
 }
 
 function Battle() {
-  const [nameA, setNameA] = React.useState('plmwa')
+  const [nameA, setNameA] = React.useState('')
   const [pointA, setPointA] = React.useState(0.0)
-  const [nameB, setNameB] = React.useState('chaha1n')
+  const [nameB, setNameB] = React.useState('')
   const [pointB, setPointB] = React.useState(0.0)
 
+  const MQTTOptions = {
+    port:	process.env.WSPORT,
+    username:process.env.USERNAME,
+    password:process.env.PASSWORD,
+  }
+  const client = mqtt.connect('wss://driver.cloudmqtt.com',MQTTOptions);
+
+  const onMessageCallback = (topic,payload,packet)=>{
+    const body = JSON.parse(payload.toString())
+    console.log(nameA,nameB,pointA,pointB)
+    console.log(body)
+   
+    const playerName = body.name.toString();
+    const smell = parseInt(body.value)
+    if(!Number.isNaN(smell)){
+      if(nameA === ''){
+        setNameA(playerName);
+        console.log('nameA set')
+      }
+      else if(nameA === playerName){  
+        setPointA(smell);
+        console.log('pointA set')
+      }else if(nameB === ""){
+        setNameB(playerName);
+        console.log('nameB set')
+      }else if(nameB === playerName){
+        setPointB(smell)
+        console.log('pointB set')
+      }
+    }
+  }
+
+  client.on('message',onMessageCallback);
+  const topic = 'smell'; //TODO:import topic with Redux by RAINeko
+  
+ 
   React.useEffect(() => {
     //ここでIoT coreから取得したデータをsetHogeを使ってセットする
-  }, [])
+    client.on('connect',()=>{
+      client.subscribe(topic,{qos:2});
+    })
+  }, [])//We need to subscribe just once,so hand over blank array.
 
   return (
     <Background>
