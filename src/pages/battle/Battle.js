@@ -70,7 +70,10 @@ function Battle() {
     const playerName = body.name.toString();
     const smell = parseInt(body.value)
     if(!Number.isNaN(smell)){
-      if(nameA === ''){
+      if(smell === 100){
+        client.end()
+        //TODO:ホーム画面に戻る by Raineko
+      }else if(nameA === ''){
         setNameA(playerName);
         console.log('nameA set')
       }
@@ -92,7 +95,6 @@ function Battle() {
   
  
   React.useEffect(() => {
-    //ここでIoT coreから取得したデータをsetHogeを使ってセットする
     client.on('connect',()=>{
       client.subscribe(topic,{qos:2});
     })
