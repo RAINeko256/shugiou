@@ -36,16 +36,69 @@ const style = {
   p: 4,
 }
 
+const useStyles = makeStyles((theme) => ({
+  buttonEffect: {
+    color: '#F00',
+    animation: `$buttonAnime 2s`,
+  },
+  '@keyframes buttonAnime': {
+    '0%': {
+      transform: 'translate(2px, 0px)',
+    },
+    '5%': {
+      transform: 'translate(-2px, 0px)',
+    },
+    '10%': {
+      transform: 'translate(2px, 0px)',
+    },
+    '15%': {
+      transform: 'translate(-2px, 0px)',
+    },
+    '20%': {
+      transform: 'translate(2px, 0px)',
+    },
+    '25%': {
+      transform: 'translate(-2px, 0px)',
+    },
+    '30%': {
+      transform: 'translate(0px, 0px)',
+    },
+  },
+}))
+
 function EnterModal(props) {
   let text = '' //textfield用の一時変数 使わない
-  const dispatch = useDispatch() //redux用
-  const [topic, setTopic] = React.useState('')
   const navigate = useNavigate()
+  const classes = useStyles()
+  const dispatch = useDispatch() //redux用
+
+  const [topic, setTopic] = React.useState('')
+  const [warning, setWarning] = React.useState(false)
+
+  const setWarningTrue = () => {
+    return new Promise((resolve, reject) => {
+      try {
+        setWarning(true)
+        resolve()
+      } catch (e) {
+        reject()
+      }
+    })
+  }
 
   const handleButtonClick = () => {
     if (topic) {
       navigate('/battle')
     } else {
+      setWarningTrue()
+        .then(() => {
+          setTimeout(()=>{
+            setWarning(false)
+          },500)
+        })
+        .catch((e) => {
+          console.log(e)
+        })
     }
   }
   const handleOnChange = (event) => {
@@ -78,7 +131,11 @@ function EnterModal(props) {
             )}
           </Stack>
           <Box>
-            <Button variant="contained" onClick={() => handleButtonClick()}>
+            <Button
+              className={warning ? classes.buttonEffect : ''}
+              variant="contained"
+              onClick={() => handleButtonClick()}
+            >
               参加する
             </Button>
           </Box>
