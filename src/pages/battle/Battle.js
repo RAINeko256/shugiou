@@ -58,9 +58,9 @@ function Battle() {
   const [pointB, setPointB] = React.useState(0.0)
 
   const MQTTOptions = {
-    port:	process.env.WSPORT,
-    username:process.env.USERNAME,
-    password:process.env.PASSWORD,
+    port:	process.env.REACT_APP_WSPORT,
+    username:process.env.REACT_APP_USERNAME,
+    password:process.env.REACT_APP_PASSWORD,
   }
   const client = mqtt.connect('wss://driver.cloudmqtt.com',MQTTOptions);
 
