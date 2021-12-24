@@ -53,7 +53,7 @@ const Header = (props) => {
           }}
         />
       </Card>
-      <Title fontSize={80} noStroke={props.end}/>
+      <Title fontSize={80} noStroke={props.end} />
     </div>
   )
 }
@@ -119,8 +119,6 @@ function Balloon(props) {
           : css({
               minWidth: `${size}px`,
               minHeight: `${size}px`,
-              width: `${size}px`,
-              height: `${size}px`,
               display: 'flex',
               justifyContent: 'space-around',
               alignItems: 'center',
@@ -138,44 +136,62 @@ function Balloon(props) {
         })}
       >
         {props.point === 100 ? (
+          <>
+            <h1
+              className={css({
+                margin: '0%',
+                fontFamily: 'Noto Sans JP',
+                fontStyle: 'normal',
+                fontSize: '60px',
+                lineHeight: '209px',
+                alignItems: 'center',
+                textAlign: 'center',
+
+                color: '#FFF',
+                TextStroke: '2px #000',
+                WebkitTextStroke: '2px #000',
+              })}
+            >
+              Winner
+            </h1>
+            <h1
+              className={css({
+                margin: '0%',
+                fontFamily: 'Noto Sans JP',
+                fontStyle: 'normal',
+                fontWeight: 'bold',
+                fontSize: '80px',
+                lineHeight: '100px',
+                alignItems: 'center',
+                textAlign: 'center',
+
+                color: 'rgba(0,0,0,0)',
+                backgroundClip: 'text',
+                WebkitBackgroundClip: 'text',
+                backgroundImage:
+                  'radial-gradient(50% 50% at 50% 50%, #E57F20 0%, rgba(227, 90, 90, 0.75) 100%)',
+              })}
+            >
+              {props.children}
+            </h1>
+          </>
+        ) : (
           <h1
             className={css({
               margin: '0%',
               fontFamily: 'Noto Sans JP',
               fontStyle: 'normal',
-              fontWeight: 'bold',
-              fontSize: '80px',
-              lineHeight: '100px',
+              fontSize: '60px',
+              lineHeight: '209px',
               alignItems: 'center',
               textAlign: 'center',
 
-              color: 'rgba(0,0,0,0)',
-              backgroundClip: 'text',
-              WebkitBackgroundClip: 'text',
-              backgroundImage:
-                'radial-gradient(50% 50% at 50% 50%, #E57F20 0%, rgba(227, 90, 90, 0.75) 100%)',
+              color: '#000000',
             })}
           >
-            Winner
+            {props.children}
           </h1>
-        ) : (
-          <></>
         )}
-        <h1
-          className={css({
-            margin: '0%',
-            fontFamily: 'Noto Sans JP',
-            fontStyle: 'normal',
-            fontSize: '60px',
-            lineHeight: '209px',
-            alignItems: 'center',
-            textAlign: 'center',
-
-            color: '#000000',
-          })}
-        >
-          {props.children}
-        </h1>
         <h3
           className={css({
             margin: '0%',
@@ -187,27 +203,33 @@ function Balloon(props) {
           {props.point}%
         </h3>
       </div>
-      <Button
-        variant="contained"
-        onClick={() => {
-          navigate('/')
-        }}
-        sx={{
-          position:'absolute',
-          right:'40%'
-        }}
-      >
-        ホームに戻る
-      </Button>
+      {props.point === 100 ? (
+        <Button
+          variant="contained"
+          onClick={() => {
+            navigate('/')
+          }}
+          sx={{
+            position: 'absolute',
+            right: `${props.btnPosition == 'right' ? '30%' : ''}`,
+            left: `${props.btnPosition == 'left' ? '30%' : ''}`,
+          }}
+        >
+          ホームに戻る
+        </Button>
+      ) : (
+        <></>
+      )}
     </div>
   )
 }
 
 function Battle() {
-  const [nameA, setNameA] = React.useState('plmwa')
-  const [pointA, setPointA] = React.useState(100)
-  const [nameB, setNameB] = React.useState('chaha1n')
-  const [pointB, setPointB] = React.useState(40)
+  const default_name = '対戦者を待っています...'
+  const [nameA, setNameA] = React.useState(default_name)
+  const [pointA, setPointA] = React.useState(50)
+  const [nameB, setNameB] = React.useState(default_name)
+  const [pointB, setPointB] = React.useState(100)
 
   const MQTTOptions = {
     port: process.env.REACT_APP_WSPORT,
@@ -267,7 +289,7 @@ function Battle() {
         bottom: '0px',
       })}
     >
-      <Header topic={topic} end={pointA===100 || pointB===100}/>
+      <Header topic={topic} end={pointA === 100 || pointB === 100} />
       <Background>
         <div
           className={css({
@@ -279,7 +301,9 @@ function Battle() {
             padding: '1rem',
           })}
         >
-          <Balloon point={pointA}>{nameA}</Balloon>
+          <Balloon point={pointA} btnPosition="right">
+            {nameA}
+          </Balloon>
           <div className={css({})}>
             <h2
               className={css({
@@ -290,7 +314,9 @@ function Battle() {
               VS
             </h2>
           </div>
-          <Balloon point={pointB}>{nameB}</Balloon>
+          <Balloon point={pointB} btnPosition="left">
+            {nameB}
+          </Balloon>
         </div>
       </Background>
     </div>
