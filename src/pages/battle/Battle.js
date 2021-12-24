@@ -3,6 +3,8 @@ import { css } from '@emotion/css'
 
 import * as React from 'react'
 
+import store from '../../store/index'
+
 import { styled } from '@mui/material/styles'
 import Box from '@mui/material/Box'
 import LinearProgress from '@mui/material/LinearProgress'
@@ -91,7 +93,7 @@ function Battle() {
   }
 
   client.on('message',onMessageCallback);
-  const topic = 'smell'; //TODO:import topic with Redux by RAINeko
+  const topic = store.getState().topic; 
   
  
   React.useEffect(() => {
