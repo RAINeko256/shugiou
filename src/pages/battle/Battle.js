@@ -70,17 +70,17 @@ function Battle() {
     const playerName = body.name.toString();
     const smell = parseInt(body.value)
     if(!Number.isNaN(smell)){
-      if(smell === 100){
+      if(smell === 100){//試合終了
         client.end()
         //TODO:ホーム画面に戻る by Raineko
-      }else if(nameA === ''){
+      }else if(nameA === ''){//まだどのクライアントも接続していない
         setNameA(playerName);
         console.log('nameA set')
       }
       else if(nameA === playerName){  
         setPointA(smell);
         console.log('pointA set')
-      }else if(nameB === ""){
+      }else if(nameB === ''){//クライアントが1台だけ接続されている
         setNameB(playerName);
         console.log('nameB set')
       }else if(nameB === playerName){
