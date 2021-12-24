@@ -62,7 +62,6 @@ function Battle() {
     username:process.env.REACT_APP_USERNAME,
     password:process.env.REACT_APP_PASSWORD,
   }
-  const client = mqtt.connect('wss://driver.cloudmqtt.com',MQTTOptions);
 
   const onMessageCallback = (topic,payload,packet)=>{
     const body = JSON.parse(payload.toString())
@@ -92,15 +91,19 @@ function Battle() {
     }
   }
 
-  client.on('message',onMessageCallback);
   const topic = store.getState().topic; 
   
- 
   React.useEffect(() => {
-    client.on('connect',()=>{
-      client.subscribe(topic,{qos:2});
-    })
-  }, [])//We need to subscribe just once,so hand over blank array.
+    const client = mqtt.connect('wss://driver.cloudmqtt.com',MQTTOptions);
+    //TODO:Set client to Redux
+    client.subscribe(topic,{qos:2});
+    console.log('subscribe')
+  }, [])
+
+  React.useEffect(()=>{
+    //TODO:Use client from Redux
+    client.on('message',onMessageCallback);
+  },[onMessageCallback]);
 
   return (
     <Background>
