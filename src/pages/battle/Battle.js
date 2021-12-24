@@ -227,9 +227,9 @@ function Balloon(props) {
 function Battle() {
   const default_name = '対戦者を待っています...'
   const [nameA, setNameA] = React.useState(default_name)
-  const [pointA, setPointA] = React.useState(50)
+  const [pointA, setPointA] = React.useState(0)
   const [nameB, setNameB] = React.useState(default_name)
-  const [pointB, setPointB] = React.useState(100)
+  const [pointB, setPointB] = React.useState(0)
 
   const MQTTOptions = {
     port: process.env.REACT_APP_WSPORT,
