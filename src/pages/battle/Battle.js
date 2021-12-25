@@ -276,7 +276,7 @@ function Battle() {
     console.log('connnect')
   })
   React.useEffect(() => {
-    //client.subscribe(topic, { qos: 2 })
+    client.subscribe(topic, { qos: 2 })
     console.log('useEffect')
   }, []) //We need to subscribe just once,so hand over blank array.
 
