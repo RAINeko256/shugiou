@@ -1,7 +1,7 @@
 /** @jsxImportSource @emotion/react */
 import { css } from '@emotion/css'
 
-function Title() {
+function Title(props) {
   return (
     <h1
       className={css({
@@ -9,14 +9,14 @@ function Title() {
         fontFamily: 'Noto Sans JP',
         fontStyle: 'normal',
         fontWeight: 'bold',
-        fontSize: '144px',
-        lineHeight: '209px',
+        fontSize: `${props.fontSize}px`,
+        lineHeight: `${props.fontSize +20}px`,
         alignItems: 'center',
         textAlign: 'center',
 
         color: '#000000',
-        TextStroke: '4px #FFFFFF',
-        WebkitTextStroke: '4px #FFFFFF',
+        TextStroke: `${props.noStroke ? '':'4px #FFFFFF'}`,
+        WebkitTextStroke: `${props.noStroke ? '':'4px #FFFFFF'}`,
       })}
     >
       臭戯王
