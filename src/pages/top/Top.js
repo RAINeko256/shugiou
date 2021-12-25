@@ -151,7 +151,7 @@ function Top() {
   const handleClose = () => setModalOpened(false)
   return (
     <Background>
-      <Title />
+      <Title fontSize={144}/>
       {/**参戦する、観戦するボタン2つのコンテナ */}
       <EnterModal open={modalOpened} close={handleClose} />
       <div
