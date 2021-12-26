@@ -12,9 +12,9 @@ const topicReducer = (state = '', action) => {
 }
 
 const MQTTOptions = {
-  port: process.env.REACT_APP_WSPORT,
-  username: process.env.REACT_APP_USERNAME,
-  password: process.env.REACT_APP_PASSWORD,
+  port: process.env.WSPORT,
+  username: process.env.USERNAME,
+  password: process.env.PASSWORD,
 }
 const initialMqttClient = mqtt.connect(
   'wss://driver.cloudmqtt.com',
