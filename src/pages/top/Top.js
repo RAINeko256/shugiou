@@ -72,9 +72,9 @@ function EnterModal(props) {
   const classes = useStyles()
   const dispatch = useDispatch() //redux用
 
-  const [topic, setTopic] = React.useState('')
+  const topic = useSelector((state) => state.topicReducer)
   const [warning, setWarning] = React.useState(false)
-
+  
   const setWarningTrue = () => {
     return new Promise((resolve, reject) => {
       try {
@@ -92,9 +92,9 @@ function EnterModal(props) {
     } else {
       setWarningTrue()
         .then(() => {
-          setTimeout(()=>{
+          setTimeout(() => {
             setWarning(false)
-          },500)
+          }, 500)
         })
         .catch((e) => {
           console.log(e)
@@ -102,8 +102,7 @@ function EnterModal(props) {
     }
   }
   const handleOnChange = (event) => {
-    dispatch({ type: 'CHANGE_TOPIC', topic: event.target.value })
-    setTopic(store.getState().topic)
+    dispatch({ type: 'SET_TOPIC', topic: event.target.value })
   }
 
   return (
@@ -151,7 +150,7 @@ function Top() {
   const handleClose = () => setModalOpened(false)
   return (
     <Background>
-      <Title fontSize={144}/>
+      <Title fontSize={144} />
       {/**参戦する、観戦するボタン2つのコンテナ */}
       <EnterModal open={modalOpened} close={handleClose} />
       <div
