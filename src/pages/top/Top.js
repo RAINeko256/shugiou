@@ -150,7 +150,14 @@ function Top() {
   const handleClose = () => setModalOpened(false)
   return (
     <Background>
+      <div className={css({
+        display:'flex',
+        alignItems:'center',
+        flexDirection:'column',
+        marginBottom:'100px',
+      })}>
       <Title fontSize={144} />
+      </div>
       {/**参戦する、観戦するボタン2つのコンテナ */}
       <EnterModal open={modalOpened} close={handleClose} />
       <div
@@ -164,6 +171,7 @@ function Top() {
         <GlassButton onClick={handleOpen}>観戦する</GlassButton>
       </div>
     </Background>
+
   )
 }
 
