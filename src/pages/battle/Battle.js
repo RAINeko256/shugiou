@@ -234,7 +234,7 @@ function Battle() {
     const smellPoint = parseInt(body.value)
     if (!Number.isNaN(smellPoint)) {
       dispatch({ type: 'SET_PLAYER_DATA', name: name, point: smellPoint })
-      if (smellPoint === 100) {
+      if (smellPoint >= 100) {
         //試合終了
         client.end()
       }
