@@ -112,7 +112,7 @@ function Balloon(props) {
   return (
     <div
       className={
-        props.point === 100
+        props.point >= 100
           ? classes.burstEffect
           : css({
               minWidth: `${size}px`,
@@ -133,7 +133,7 @@ function Balloon(props) {
           flexDirection: 'column',
         })}
       >
-        {props.point === 100 ? (
+        {props.point >= 100 ? (
           <>
             <h1
               className={css({
@@ -201,7 +201,7 @@ function Balloon(props) {
           {props.point}%
         </h3>
       </div>
-      {props.point === 100 ? (
+      {props.point >= 100 ? (
         <Button
           variant="contained"
           onClick={() => {
@@ -262,7 +262,7 @@ function Battle() {
     >
       <Header
         topic={topic}
-        end={player.pointA === 100 || player.pointB === 100}
+        end={player.pointA >= 100 || player.pointB >= 100}
       />
       <Background>
         <div
