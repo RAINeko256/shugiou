@@ -4,16 +4,15 @@ import { css } from '@emotion/css'
 import * as React from 'react'
 import { useNavigate } from 'react-router'
 
-import store from '../../store/index'
+import { useSelector, useDispatch } from 'react-redux'
 
 import { Button } from '@mui/material'
-import { Card, CardContent } from '@mui/material'
+import { Card } from '@mui/material'
 import { Chip } from '@mui/material'
 import { makeStyles } from '@mui/styles'
 
 import Background from '../../component/Background'
 import Title from '../../component/Title'
-import mqtt from 'mqtt-browser'
 
 const Header = (props) => {
   return (
@@ -110,11 +109,10 @@ function Balloon(props) {
     },
   }))
   const classes = useStyles()
-  console.log(size)
   return (
     <div
       className={
-        props.point === 100
+        props.point >= 100
           ? classes.burstEffect
           : css({
               minWidth: `${size}px`,
@@ -135,7 +133,7 @@ function Balloon(props) {
           flexDirection: 'column',
         })}
       >
-        {props.point === 100 ? (
+        {props.point >= 100 ? (
           <>
             <h1
               className={css({
@@ -203,7 +201,7 @@ function Balloon(props) {
           {props.point}%
         </h3>
       </div>
-      {props.point === 100 ? (
+      {props.point >= 100 ? (
         <Button
           variant="contained"
           onClick={() => {
@@ -211,8 +209,8 @@ function Balloon(props) {
           }}
           sx={{
             position: 'absolute',
-            right: `${props.btnPosition == 'right' ? '30%' : ''}`,
-            left: `${props.btnPosition == 'left' ? '30%' : ''}`,
+            right: `${props.btnPosition === 'right' ? '30%' : ''}`,
+            left: `${props.btnPosition === 'left' ? '30%' : ''}`,
           }}
         >
           ホームに戻る
@@ -225,61 +223,34 @@ function Balloon(props) {
 }
 
 function Battle() {
-  const default_name = '対戦者を待っています...'
-  const [nameA, setNameA] = React.useState(default_name)
-  const [pointA, setPointA] = React.useState(0)
-  const [nameB, setNameB] = React.useState(default_name)
-  const [pointB, setPointB] = React.useState(0)
-
-  const MQTTOptions = {
-    port: process.env.REACT_APP_WSPORT,
-    username: process.env.REACT_APP_USERNAME,
-    password: process.env.REACT_APP_PASSWORD,
-  }
-  const client = mqtt.connect('wss://driver.cloudmqtt.com', MQTTOptions)
-  console.log('client connect')
+  const dispatch = useDispatch() //redux
+  const topic = useSelector((state) => state.topicReducer)
+  const client = useSelector((state) => state.mqttClientReducer)
+  const player = useSelector((state) => state.playerReducer)
 
   const onMessageCallback = (topic, payload, packet) => {
     const body = JSON.parse(payload.toString())
-    console.log(nameA, nameB, pointA, pointB)
-    console.log(body)
-
-    const playerName = body.name.toString()
-    const smell = parseInt(body.value)
-    if (!Number.isNaN(smell)) {
-      if (smell === 100) {
+    const name = body.name.toString()
+    const smellPoint = parseInt(body.value)
+    if (!Number.isNaN(smellPoint)) {
+      dispatch({ type: 'SET_PLAYER_DATA', name: name, point: smellPoint })
+      if (smellPoint >= 100) {
         //試合終了
         client.end()
-        //TODO:ホーム画面に戻る by Raineko
-      } else if (nameA === '') {
-        //まだどのクライアントも接続していない
-        setNameA(playerName)
-        console.log('nameA set')
-      } else if (nameA === playerName) {
-        setPointA(smell)
-        console.log('pointA set')
-      } else if (nameB === '') {
-        //クライアントが1台だけ接続されている
-        setNameB(playerName)
-        console.log('nameB set')
-      } else if (nameB === playerName) {
-        setPointB(smell)
-        console.log('pointB set')
       }
+    } else {
+      console.log('smell point is not number')
     }
   }
 
-  client.on('message', onMessageCallback)
-  const topic = store.getState().topic
-
-  client.on('connect', () => {
-    console.log('connnect')
-  })
   React.useEffect(() => {
     client.subscribe(topic, { qos: 2 })
-    console.log('useEffect')
-  }, []) //We need to subscribe just once,so hand over blank array.
+    console.log('subscribe in use effect')
+    client.on('message', onMessageCallback)
+    console.log('callback is set')
+  }, [])
 
+  console.log(player.nameA)
   return (
     <div
       className={css({
@@ -289,7 +260,10 @@ function Battle() {
         bottom: '0px',
       })}
     >
-      <Header topic={topic} end={pointA === 100 || pointB === 100} />
+      <Header
+        topic={topic}
+        end={player.pointA >= 100 || player.pointB >= 100}
+      />
       <Background>
         <div
           className={css({
@@ -301,8 +275,8 @@ function Battle() {
             padding: '1rem',
           })}
         >
-          <Balloon point={pointA} btnPosition="right">
-            {nameA}
+          <Balloon point={player.pointA} btnPosition="right">
+            {player.nameA}
           </Balloon>
           <div className={css({})}>
             <h2
@@ -314,8 +288,8 @@ function Battle() {
               VS
             </h2>
           </div>
-          <Balloon point={pointB} btnPosition="left">
-            {nameB}
+          <Balloon point={player.pointB} btnPosition="left">
+            {player.nameB}
           </Balloon>
         </div>
       </Background>
