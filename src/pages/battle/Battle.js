@@ -350,6 +350,7 @@ function Balloon(props) {
             position: 'absolute',
             right: `${props.btnPosition === 'right' ? '25%' : ''}`,
             left: `${props.btnPosition === 'left' ? '25%' : ''}`,
+            zIndex:10
           }}
         >
           ホームに戻る
