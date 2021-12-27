@@ -1,5 +1,5 @@
 /** @jsxImportSource @emotion/react */
-import { css } from '@emotion/css'
+import { css, keyframes } from '@emotion/css'
 
 import * as React from 'react'
 import { useNavigate } from 'react-router'
@@ -19,11 +19,12 @@ const Header = (props) => {
     <div
       className={css({
         position: 'absolute',
+        top:0,
         width: '100%',
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center',
-        backgroundColor: 'rgba(0,0,0,0)',
+        backgroundColor: 'rgba(255,255,255,0)',
       })}
     >
       <Card
@@ -52,9 +53,78 @@ const Header = (props) => {
           }}
         />
       </Card>
-      <Title fontSize={80} noStroke={props.end} />
+      <Title fontSize={80} noStroke={true} />
     </div>
   )
+}
+
+const MatchStartAlert = (props) => {
+  const texts = []
+  const windowHeight = document.documentElement.clientHeight
+  const font_size = 60
+  let j = 0
+  const fadein = keyframes({
+    'from, 0% to': {
+      opacity: 1,
+    },
+    '100%': {
+      opacity: 1,
+    },
+  })
+  for (let i = 0; i < windowHeight; i += font_size) {
+    texts.push(
+      <>
+        <h1
+          className={css({
+            position: 'absolute',
+            top: `${i}px`,
+            width: '100%',
+            margin: '0%',
+            fontFamily: 'Noto Sans JP',
+            fontStyle: 'normal',
+            fontSize: `${font_size}px`,
+            lineHeight: `${font_size + 5}px`,
+            alignItems: 'center',
+            textAlign: 'center',
+            opacity: 0,
+            animation: `${fadein} 1s ease`,
+            animationDelay: `${j}s`,
+            color: 'rgba(0,0,0,0)',
+            TextStroke: '3px #000',
+            WebkitTextStroke: '2px #000',
+            zIndex: 5,
+          })}
+        >
+          Match Start
+        </h1>
+        <h1
+          className={css({
+            position: 'absolute',
+            top: `${i}px`,
+            width: '100%',
+            margin: '0%',
+            fontFamily: 'Noto Sans JP',
+            fontStyle: 'normal',
+            fontSize: `${font_size}px`,
+            lineHeight: `${font_size + 5}px`,
+            alignItems: 'center',
+            textAlign: 'center',
+            opacity: 0,
+            animation: `${fadein} 1s ease`,
+            animationDelay: `${j}s`,
+            color: 'rgba(0,0,0,0)',
+            TextStroke: '3px #FFF',
+            WebkitTextStroke: '4px #FFF',
+            zIndex: 4,
+          })}
+        >
+          Match Start
+        </h1>
+      </>
+    )
+    j += 0.05
+  }
+  return <div>{texts}</div>
 }
 
 function Balloon(props) {
@@ -123,7 +193,7 @@ function Balloon(props) {
               padding: '2rem',
               borderRadius: '50%',
               background:
-                'radial-gradient(70.5% 70.5% at 38.63% 29.5%, rgba(196, 196, 196, 0) 16.15%, #C4C4C4 82.81%, #989797 100%), rgba(255,255,255,0.6)',
+                'radial-gradient(70.5% 70.5% at 38.63% 29.5%, rgba(196, 196, 196, 0) 16.15%, #C4C4C4 82.81%, #989797 100%), #FFF',
             })
       }
     >
@@ -264,6 +334,7 @@ function Battle() {
         topic={topic}
         end={player.pointA >= 100 || player.pointB >= 100}
       />
+      {(player.pointA || player.pointB)? <MatchStartAlert /> : <></>}
       <Background>
         <div
           className={css({
