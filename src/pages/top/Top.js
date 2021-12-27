@@ -135,7 +135,7 @@ function EnterModal(props) {
               variant="contained"
               onClick={() => handleButtonClick()}
             >
-              参加する
+              {props.buttonText}
             </Button>
           </Box>
         </Box>
@@ -146,7 +146,11 @@ function EnterModal(props) {
 
 function Top() {
   const [modalOpened, setModalOpened] = React.useState(false)
-  const handleOpen = () => setModalOpened(true)
+  const [buttonText,setButtonText] = React.useState('')
+  const handleOpen = (text) => {
+    setButtonText(text)
+    setModalOpened(true)}
+
   const handleClose = () => setModalOpened(false)
   return (
     <Background>
@@ -159,7 +163,7 @@ function Top() {
       <Title fontSize={144} />
       </div>
       {/**参戦する、観戦するボタン2つのコンテナ */}
-      <EnterModal open={modalOpened} close={handleClose} />
+      <EnterModal open={modalOpened} close={handleClose} buttonText={buttonText} />
       <div
         className={css({
           width: '100%',
@@ -167,8 +171,8 @@ function Top() {
           justifyContent: 'space-around',
         })}
       >
-        <GlassButton onClick={handleOpen}>参戦する</GlassButton>
-        <GlassButton onClick={handleOpen}>観戦する</GlassButton>
+        <GlassButton onClick={()=>handleOpen('参戦する')}>参戦する</GlassButton>
+        <GlassButton onClick={()=>handleOpen('観戦する')}>観戦する</GlassButton>
       </div>
     </Background>
 

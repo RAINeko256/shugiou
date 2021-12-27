@@ -19,7 +19,7 @@ const Header = (props) => {
     <div
       className={css({
         position: 'absolute',
-        top:0,
+        top: 0,
         width: '100%',
         display: 'flex',
         justifyContent: 'center',
@@ -127,9 +127,41 @@ const MatchStartAlert = (props) => {
   return <div>{texts}</div>
 }
 
+const hexToRgb = (hex) => {
+  var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex)
+  return result
+    ? {
+        r: parseInt(result[1], 16),
+        g: parseInt(result[2], 16),
+        b: parseInt(result[3], 16),
+      }
+    : null
+}
+
 function Balloon(props) {
   const size = 200 + props.point * 8
   const navigate = useNavigate()
+  const winnerBgColor = '#ffb400'
+  const dispatch = useDispatch() //redux
+
+  const winBg = () => {
+    const rgb = hexToRgb(winnerBgColor)
+    const a = `rgba(${Math.max(rgb.r - 59, 0)},${Math.max(
+      rgb.g - 59,
+      0
+    )},${Math.max(rgb.b - 59, 0)},0)`
+    const b = `rgba(${Math.max(rgb.r - 59, 0)},${Math.max(
+      rgb.g - 59,
+      0
+    )},${Math.max(rgb.b - 59, 0)},1)`
+    const c = `rgba(${Math.max(rgb.r - 72, 0)},${Math.max(
+      rgb.g - 72,
+      0
+    )},${Math.max(rgb.b - 72, 0)},1)`
+
+    return { a: a, b: b, c: c }
+  }
+
   const useStyles = makeStyles((theme) => ({
     burstEffect: {
       display: 'flex',
@@ -138,8 +170,9 @@ function Balloon(props) {
       alignItems: 'center',
       padding: '1rem',
       borderRadius: '50%',
-      background:
-        'radial-gradient(70.5% 70.5% at 38.63% 29.5%, rgba(196, 196, 196, 0) 16.15%, #C4C4C4 82.81%, #989797 100%), #FFFFFF',
+      background: `radial-gradient(70.5% 70.5% at 38.63% 29.5%, ${
+        winBg().a
+      } 16.15%, ${winBg().b} 82.81%, ${winBg().c} 100%), ${winnerBgColor}`,
       animation: `$burstAnime 2s`,
       animationFillMode: 'forwards',
     },
@@ -179,6 +212,45 @@ function Balloon(props) {
     },
   }))
   const classes = useStyles()
+
+  //https://www.colorhexa.com/ffb400
+  const colorGrad = [
+    '#ffffff',
+    '#fff9eb',
+    '#fff3d8',
+    '#ffeec4',
+    '#ffe8b1',
+    '#ffe29d',
+    '#ffdc89',
+    '#ffd776',
+    '#ffd162',
+    '#ffcb4e',
+    '#ffc53b',
+    '#ffc027',
+  ]
+  let shadowColor1, shadowColor1clear, shadowColor2
+  let j = 11 //colorGradの個数
+  //ポイントを、0から11まで12段階に分け、段階ごとに色を超える
+  for (let i = 88; i >= 0; i -= 8, j--) {
+    //ポイントが基準値以上かどうか判断
+    if (props.point >= i) {
+      const rgb = hexToRgb(colorGrad[j])
+      shadowColor1clear = `rgba(${Math.max(rgb.r - 59, 0)},${Math.max(
+        rgb.g - 59,
+        0
+      )},${Math.max(rgb.b - 59, 0)},0)`
+      shadowColor1 = `rgba(${Math.max(rgb.r - 59, 0)},${Math.max(
+        rgb.g - 59,
+        0
+      )},${Math.max(rgb.b - 59, 0)},1)`
+      shadowColor2 = `rgba(${Math.max(rgb.r - 72, 0)},${Math.max(
+        rgb.g - 72,
+        0
+      )},${Math.max(rgb.b - 72, 0)},1)`
+      break
+    }
+  }
+
   return (
     <div
       className={
@@ -192,8 +264,7 @@ function Balloon(props) {
               alignItems: 'center',
               padding: '2rem',
               borderRadius: '50%',
-              background:
-                'radial-gradient(70.5% 70.5% at 38.63% 29.5%, rgba(196, 196, 196, 0) 16.15%, #C4C4C4 82.81%, #989797 100%), #FFF',
+              background: `radial-gradient(70.5% 70.5% at 38.63% 29.5%, ${shadowColor1clear} 16.15%, ${shadowColor1} 82.81%, ${shadowColor2} 100%), ${colorGrad[j]}`,
             })
       }
     >
@@ -228,8 +299,8 @@ function Balloon(props) {
                 fontFamily: 'Noto Sans JP',
                 fontStyle: 'normal',
                 fontWeight: 'bold',
-                fontSize: '80px',
-                lineHeight: '100px',
+                fontSize: '100px',
+                lineHeight: '120px',
                 alignItems: 'center',
                 textAlign: 'center',
 
@@ -263,7 +334,7 @@ function Balloon(props) {
         <h3
           className={css({
             margin: '0%',
-            fontSize: '30px',
+            fontSize: '50px',
             alignItems: 'center',
             textAlign: 'center',
           })}
@@ -276,11 +347,13 @@ function Balloon(props) {
           variant="contained"
           onClick={() => {
             navigate('/')
+            dispatch({ type: 'CLEAR_PLAYER_DATA' })
           }}
           sx={{
             position: 'absolute',
-            right: `${props.btnPosition === 'right' ? '30%' : ''}`,
-            left: `${props.btnPosition === 'left' ? '30%' : ''}`,
+            right: `${props.btnPosition === 'right' ? '25%' : ''}`,
+            left: `${props.btnPosition === 'left' ? '25%' : ''}`,
+            zIndex: 10,
           }}
         >
           ホームに戻る
@@ -334,7 +407,7 @@ function Battle() {
         topic={topic}
         end={player.pointA >= 100 || player.pointB >= 100}
       />
-      {(player.pointA || player.pointB)? <MatchStartAlert /> : <></>}
+      {player.pointA || player.pointB ? <MatchStartAlert /> : <></>}
       <Background>
         <div
           className={css({
