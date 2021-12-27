@@ -142,7 +142,9 @@ function Balloon(props) {
   const size = 200 + props.point * 8
   const navigate = useNavigate()
   const winnerBgColor = '#ffb400'
-  const winBg = ()=>{
+  const dispatch = useDispatch() //redux
+
+  const winBg = () => {
     const rgb = hexToRgb(winnerBgColor)
     const a = `rgba(${Math.max(rgb.r - 59, 0)},${Math.max(
       rgb.g - 59,
@@ -157,11 +159,9 @@ function Balloon(props) {
       0
     )},${Math.max(rgb.b - 72, 0)},1)`
 
-    return(
-      {a:a,b:b,c:c}
-    )
+    return { a: a, b: b, c: c }
   }
-  
+
   const useStyles = makeStyles((theme) => ({
     burstEffect: {
       display: 'flex',
@@ -170,7 +170,9 @@ function Balloon(props) {
       alignItems: 'center',
       padding: '1rem',
       borderRadius: '50%',
-      background: `radial-gradient(70.5% 70.5% at 38.63% 29.5%, ${winBg().a} 16.15%, ${winBg().b} 82.81%, ${winBg().c} 100%), ${winnerBgColor}`,
+      background: `radial-gradient(70.5% 70.5% at 38.63% 29.5%, ${
+        winBg().a
+      } 16.15%, ${winBg().b} 82.81%, ${winBg().c} 100%), ${winnerBgColor}`,
       animation: `$burstAnime 2s`,
       animationFillMode: 'forwards',
     },
@@ -345,12 +347,13 @@ function Balloon(props) {
           variant="contained"
           onClick={() => {
             navigate('/')
+            dispatch({ type: 'CLEAR_PLAYER_DATA' })
           }}
           sx={{
             position: 'absolute',
             right: `${props.btnPosition === 'right' ? '25%' : ''}`,
             left: `${props.btnPosition === 'left' ? '25%' : ''}`,
-            zIndex:10
+            zIndex: 10,
           }}
         >
           ホームに戻る
@@ -377,7 +380,6 @@ function Battle() {
       if (smellPoint >= 100) {
         //試合終了
         client.end()
-        dispatch({ type: 'CLEAR_PLAYER_DATA'})
       }
     } else {
       console.log('smell point is not number')
