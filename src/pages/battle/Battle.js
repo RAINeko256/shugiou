@@ -377,6 +377,7 @@ function Battle() {
       if (smellPoint >= 100) {
         //試合終了
         client.end()
+        dispatch({ type: 'CLEAR_PLAYER_DATA'})
       }
     } else {
       console.log('smell point is not number')

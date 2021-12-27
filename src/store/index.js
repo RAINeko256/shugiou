@@ -66,6 +66,13 @@ const playerReducer = (state = initialPlayerName, action) => {
       } else {
         console.log('第三者')
       }
+    case 'CLEAR_PLAYER_DATA':
+      return Object.assign({},state,{
+        nameA: default_name,
+        pointA: 0,
+        nameB: default_name,
+        pointB: 0,
+      })
     default:
       return state
   }
